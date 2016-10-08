@@ -1,47 +1,91 @@
 \def\gfnsynt@unique{\gfnsynt@uniquesub}
-\def\newsyntax#1#2#3#4{%
+\def\gfnsynt@ifsame#1#2\gfnsynt@punct#3#4\gfnsynt@punct#5#6{%
+  \if#1#3%
+    \ifx\gfnsynt@unique#2\gfnsynt@unique
+      \ifx\gfnsynt@unique#4\gfnsynt@unique#5\else#6\fi
+    \else
+      \ifx\gfnsynt@unique#4\gfnsynt@unique#6\else
+        \gfnsynt@ifsame#2\gfnsynt@punct#4\gfnsynt@punct{#5}{#6}%
+      \fi
+    \fi
+  \else
+    #6%
+  \fi
+}
+\def\gfnsynt@car#1#2\gfnsynt@endofargument{#1}
+\def\gfnsynt@syntaxcommandlist{}
+\def\newsyntax#1#2{%
   % PUBLIC
   % ---- ----
-  % #1 : strength of syntactic association
+  % #1 : assoc
   % #2 : control sequence
   % #3 : number of arguments
   % #4 : definition
   % ---- ----
-  \expandafter\def\csname gfnsynt@assoc[\string#1]\endcsname{#1}%
-  \@ifdefinable#2{%
-    \expandafter\@yargdef\csname gfnsynt@dummy[\string#2]\endcsname\@ne{#3}{#4}%
-    \expandafter\gfnsynt@defmainsyntax\expandafter{\csname gfnsynt@dummy[\string#2]\endcsname}{#2}{#3}{#1}%
+  %\@ifdefinable#2{%
+    \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#2|}
+    \expandafter\def\csname gfnsynt@assoc[\string#2]\endcsname{#1}%
+  %}%
+  \newcommand#2%
+}
+\def\gfnsynt@ifsyntaxcommand#1#2#3{%
+  % ---- ----
+  % #1 : first command
+  % #2 : then-part
+  % #3 : else-part
+  % ---- ----
+  \expandafter\gfnsynt@ifmem\expandafter#1\expandafter\gfnsynt@punct\gfnsynt@syntaxcommandlist\gfnsynt@endofargument{#2}{#3}%
+}
+\def\gfnsynt@ifmem#1\gfnsynt@punct#2|#3\gfnsynt@endofargument#4#5{%
+  % ---- ----
+  % #1    : control sequence
+  % #2|#3 : control sequence list
+  % #4    : then-part
+  % #5    : else-part
+  % ---- ----
+  \expandafter\expandafter\expandafter\gfnsynt@ifsame\expandafter\string\expandafter#1\expandafter\gfnsynt@punct\string#2\gfnsynt@punct{%
+    #4%
+  }{%
+    \ifx\gfnsynt@unique#3\gfnsynt@unique
+      #5%
+    \else
+      \gfnsynt@ifmem#1\gfnsynt@punct#3\gfnsynt@endofargument{#4}{#5}%
+    \fi
   }%
 }
-\def\gfnsynt@defmainsyntax#1#2#3#4{%
+\def\syntaxarg#1#2#3{%
   % ---- ----
-  % #1 : dummy control sequence
-  % #2 : main control sequence
-  % #3 : number of arguments
-  % #4 : strength of syntactic association
+  % #1 : criterion of assoc
+  % #2 : paren command
+  % #3 : content
   % ---- ----
-  \def\gfnsynt@makeargvarlist##1#3##2\gfnsynt@endofargument{##1#3}%
-  \expandafter\gfnsynt@defextractprefix\expandafter{\gfnsynt@makeargvarlist##1##2##3##4##5##6##7##8##9\gfnsynt@endofargument}%
-%
-  \expandafter\gfnsynt@defmainsyntaxsub\expandafter{\expandafter#1%
-    \gfnsynt@extractprefix{\gfnsynt@supplement{#4}{##1}}{\gfnsynt@supplement{#4}{##2}}{\gfnsynt@supplement{#4}{##3}}%
-                          {\gfnsynt@supplement{#4}{##4}}{\gfnsynt@supplement{#4}{##5}}{\gfnsynt@supplement{#4}{##6}}%
-                          {\gfnsynt@supplement{#4}{##7}}{\gfnsynt@supplement{#4}{##8}}{\gfnsynt@supplement{#4}{##9}}%
-  }{#2}{#3}%
+  \ifx\gfnsynt@unique#3\gfnsynt@unique
+  \else
+    \expandafter\gfnsynt@ifsyntaxcommand\expandafter{\gfnsynt@car#3\gfnsynt@endofargument}{%
+      \expandafter\gfnsynt@syntaxargI\expandafter{\gfnsynt@car#3\gfnsynt@endofargument}{#2}{#3}{#1}%
+    }{#3}%
+  \fi
 }
-\def\gfnsynt@defextractprefix#1{\def\gfnsynt@extractprefix##1##2##3##4##5##6##7##8##9{#1}}
-\def\gfnsynt@defmainsyntaxsub#1#2#3{%
+\def\gfnsynt@syntaxargI#1#2#3#4{%
   % ---- ----
-  % #1 : intermediate definition
-  % #2 : main control sequence
-  % #3 : number of arguments
+  % #1 : first command of content
+  % #2 : paren command
+  % #3 : content
+  % #4 : criterion of assoc
   % ---- ----
-  \@yargdef#2\@ne{#3}{#1}%
+  \expandafter\expandafter\expandafter\gfnsynt@syntaxargII\expandafter\expandafter\expandafter
+    {\csname gfnsynt@assoc[\string#1]\endcsname}{#4}{#2}{#3}%
 }
-\def\gfnsynt@supplement#1#2{%
+\def\gfnsynt@syntaxargII#1#2#3#4{%
   % ---- ----
-  % #1 : criterion of strength of syntactic association
-  % #2 : inner content
+  % #1 : assoc
+  % #2 : criterion of assoc
+  % #3 : paren command
+  % #4 : content
   % ---- ----
-  #2%
+  \ifnum#1<#2
+    #3{#4}%
+  \else
+    #4%
+  \fi
 }

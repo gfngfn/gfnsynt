@@ -1,0 +1,15 @@
+\documentclass[a4paper]{jsarticle}
+  \usepackage{gfnsynt}
+  \newcommand\termparen[1]{(#1)}
+  \newsyntax{0}\termletin[3]{\mathbf{let}\ #1 = #2\ \mathbf{in}\ #3}
+  \newsyntax{2}\termapp[2]{\syntaxarg{2}{\termparen}{#1}\ \syntaxarg{3}{\termparen}{#2}}
+%
+\begin{document}
+  \indent
+    \[
+      \termapp{\termletin{x}{N}{M}}{Y},\quad
+      \termapp{\termapp{a}{b}}{c},\quad
+      \termapp{c}{\termapp{a}{b}}
+    \]
+  \par
+\end{document}

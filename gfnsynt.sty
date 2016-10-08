@@ -1,5 +1,5 @@
 \def\gfnsynt@unique{\gfnsynt@uniquesub}
-\def\newsyntax#1#2#3{%
+\def\newsyntax#1#2#3#4{%
   % PUBLIC
   % ---- ----
   % #1 : strength of syntactic association
@@ -9,8 +9,8 @@
   % ---- ----
   \expandafter\def\csname gfnsynt@assoc[\string#1]\endcsname{#1}%
   \@ifdefinable#2{%
-    \expandafter\@yargdef\csname gfnsynt@dummy[#2]\endcsname\@ne{#3}{#4}%
-    \expandafter\gfnsynt@defmainsyntax\expandafter{\csname gfnsynt@dummy[#2]\endcsname}{#2}{#3}{#1}%
+    \expandafter\@yargdef\csname gfnsynt@dummy[\string#2]\endcsname\@ne{#3}{#4}%
+    \expandafter\gfnsynt@defmainsyntax\expandafter{\csname gfnsynt@dummy[\string#2]\endcsname}{#2}{#3}{#1}%
   }%
 }
 \def\gfnsynt@defmainsyntax#1#2#3#4{%
@@ -38,7 +38,7 @@
   % ---- ----
   \@yargdef#2\@ne{#3}{#1}%
 }
-\def\gfn@supplement#1#2{%
+\def\gfnsynt@supplement#1#2{%
   % ---- ----
   % #1 : criterion of strength of syntactic association
   % #2 : inner content

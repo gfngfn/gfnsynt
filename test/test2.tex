@@ -1,15 +1,32 @@
 \documentclass[a4paper]{jsarticle}
   \usepackage{gfnsynt}
+\makeatletter
+  \def\local@unique{\local@uniquesub}
   \newcommand\termparen[1]{(#1)}
   \newsyntax{0}\termletin[3]{\mathbf{let}\ #1 = #2\ \mathbf{in}\ #3}
   \newsyntax{2}\termapp[2]{\syntaxarg{2}{\termparen}{#1}\ \syntaxarg{3}{\termparen}{#2}}
+  \newsyntax{2}\termappseq[1]{\local@termappseq#1|\local@endofargument}
+  \def\local@termappseq#1|#2\local@endofargument{%
+    \syntaxarg{2}{\termparen}{#1}%
+    \ifx\local@unique#2\local@unique\else\ \local@termappseqsub#2\local@endofargument\fi
+  }
+  \def\local@termappseqsub#1|#2\local@endofargument{%
+    \ifx\local@unique#2\local@unique
+      \syntaxarg{3}{\termparen}{#1}%
+    \else
+      \syntaxarg{3}{\termparen}{#1}\ \local@termappseqsub#2\local@endofargument
+    \fi
+  }
+\makeatother
 %
 \begin{document}
   \indent
     \[
       \termapp{\termletin{x}{N}{M}}{Y},\quad
       \termapp{\termapp{a}{b}}{c},\quad
-      \termapp{c}{\termapp{a}{b}}
+      \termapp{c}{\termapp{a}{b}},\quad
+      \termappseq{f|x|\termapp{g}{y}|z},\quad
+      \termappseq{\termappseq{f|a}|x|\termappseq{g|y}|z}
     \]
   \par
 \end{document}

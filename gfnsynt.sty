@@ -1,5 +1,23 @@
+%%
+%% This is file `gfnsynt.sty',
+%% a LaTeX package for syntax of terms or logical formulae.
+%%
+%% Copyright 2016 Takashi SUWA
+%%      Email (Private) : b d . g f n g f n ( a t m a r k ) g m a i l . c o m
+%%               GitHub : https://github.com/gfngfn
+%%
+\NeedsTeXFormat{LaTeX2e}
+  [1994/12/01]% LaTeX date must be December 1994 or later
+\ProvidesPackage{gfnsynt}[2016/10/12 v0.9 by Takashi SUWA]
+%%
 \def\gfnsynt@unique{\gfnsynt@uniquesub}
 \def\gfnsynt@ifsame#1#2\gfnsynt@punct#3#4\gfnsynt@punct#5#6{%
+  % ---- ----
+  % #1#2 : token list
+  % #3#4 : token list
+  % #5 : then-part
+  % #6 : else-part
+  % ---- ----
   \if#1#3%
     \ifx\gfnsynt@unique#2\gfnsynt@unique
       \ifx\gfnsynt@unique#4\gfnsynt@unique#5\else#6\fi
@@ -22,21 +40,28 @@
   % #3 : number of arguments
   % #4 : definition
   % ---- ----
-  %\@ifdefinable#2{%
-    \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#2|}
-    \expandafter\def\csname gfnsynt@assoc[\string#2]\endcsname{#1}%
-  %}%
+  \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#2|}%
+  \expandafter\def\csname gfnsynt@assoc[\string#2]\endcsname{#1}%
   \newcommand#2%
 }
 \def\gfnsynt@ifsyntaxcommand#1#2#3{%
   % ---- ----
-  % #1 : first command
+  % #1 : first token
   % #2 : then-part
   % #3 : else-part
   % ---- ----
-  \expandafter\gfnsynt@ifmem\expandafter#1\expandafter\gfnsynt@punct\gfnsynt@syntaxcommandlist\gfnsynt@endofargument{#2}{#3}%
+  \gfnsynt@ifmem#1\gfnsynt@syntaxcommandlist{#2}{#3}%
 }
-\def\gfnsynt@ifmem#1\gfnsynt@punct#2|#3\gfnsynt@endofargument#4#5{%
+\def\gfnsynt@ifmem#1#2#3#4{%
+  % ---- ----
+  % #1 : control sequence
+  % #2 : control sequence expanded to control sequence list
+  % #3 : then-part
+  % #4 : else-part
+  % ---- ----
+  \expandafter\gfnsynt@ifmemsub\expandafter#1\expandafter\gfnsynt@punct#2\gfnsynt@endofargument{#3}{#4}%
+}
+\def\gfnsynt@ifmemsub#1\gfnsynt@punct#2|#3\gfnsynt@endofargument#4#5{%
   % ---- ----
   % #1    : control sequence
   % #2|#3 : control sequence list
@@ -49,11 +74,12 @@
     \ifx\gfnsynt@unique#3\gfnsynt@unique
       #5%
     \else
-      \gfnsynt@ifmem#1\gfnsynt@punct#3\gfnsynt@endofargument{#4}{#5}%
+      \gfnsynt@ifmemsub#1\gfnsynt@punct#3\gfnsynt@endofargument{#4}{#5}%
     \fi
   }%
 }
 \def\syntaxarg#1#2#3{%
+  % PUBLIC
   % ---- ----
   % #1 : criterion of assoc
   % #2 : paren command

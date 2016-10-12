@@ -1,0 +1,8 @@
+\newcommand\termsyntcolor{[rgb]{0.0,0.0,0.5}}
+\newcommand\termmetacolor{[rgb]{0.5,0.0,0.5}}
+\newcommand\termsynt[1]{\text{\textcolor\gfnsynt@termsyntcolor{$#1$}}}
+\newcommand\termmeta[1]{\text{\textcolor\gfnsynt@termmetacolor{$#1$}}}
+\newcommand\termletter[1]{\mathbf{#1}}
+\newsyntax{-1}\termparen[1]{\mathopen{\termsynt{(}}#1\mathclose{\termsynt{)}}}
+\newsyntax{0}\termletin[4]{\termsynt{\termletter{let}}\ #1 = \syntaxarg{0}{\termparen}{#3}\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}}
+\newsyntax{0}\termifthenelse[3]{\termsynt{\termletter{if}}\ \syntaxarg{0}{\termparen}{#1}\ \termsynt{\termletter{then}}\ \syntaxarg{0}{\termparen}{#2}\ \termsynt{\termletter{else}}\ \syntaxarg{0}{\termparen}{#3}}

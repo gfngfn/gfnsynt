@@ -36,9 +36,7 @@
   % PUBLIC
   % ---- ----
   % #1 : assoc
-  % #2 : control sequence
-  % #3 : number of arguments
-  % #4 : definition
+  % #2 : control sequence and its definition
   % ---- ----
   \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#2|}%
   \expandafter\def\csname gfnsynt@assoc[\string#2]\endcsname{#1}%
@@ -114,4 +112,24 @@
   \else
     #4%
   \fi
+}
+% ==== ==== AUTOMATED ADDITIONAL DECORATION FOR SUBSCRIPTS ==== ====
+\newtoks\gfnsynt@temptoksA
+\newtoks\gfnsynt@temptoksB
+\newtoks\gfnsynt@temptoksC
+\newtoks\gfnsynt@temptoksX
+\def\newstyledsymbol#1#2#3{%
+  \expandafter\def\expandafter#1\expandafter{\expandafter\futurelet\expandafter\gfnsynt@temp\csname local@\string#1\endcsname}%
+  \expandafter\gfnsynt@temptoksA\expandafter=\expandafter{\csname local@\string#1@sub\endcsname}\relax
+  \expandafter\gfnsynt@temptoksB\expandafter=\expandafter{\csname local@\string#1@nosub\endcsname}\relax
+%
+  \expandafter\def\the\gfnsynt@temptoksA_##1{#2{#3_{##1}}}%
+  \expandafter\def\the\gfnsynt@temptoksB{#2{#3}}%
+%
+  \expandafter\expandafter\expandafter\gfnsynt@temptoksX\expandafter\expandafter\expandafter=\expandafter\expandafter\expandafter{%
+    \expandafter\expandafter\expandafter\ifx\expandafter\expandafter\expandafter\gfnsynt@temp\expandafter\expandafter\expandafter_\expandafter\expandafter\expandafter\expandafter\expandafter\the\expandafter\gfnsynt@temptoksA\expandafter\else\expandafter\expandafter\the\gfnsynt@temptoksB\fi}\relax
+%
+  \expandafter\gfnsynt@temptoksC\expandafter=\expandafter{\csname local@\string#1\endcsname}\relax
+%
+  \expandafter\expandafter\expandafter\def\expandafter\the\expandafter\gfnsynt@temptoksC\expandafter{\the\gfnsynt@temptoksX}%
 }

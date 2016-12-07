@@ -9,24 +9,32 @@
 \newsyntax{0}\termabs[2]{\termsynt{\termletter{\lambda}}#1\termsynt{.}\ \syntaxarg{0}{\termparen}{#2}}
 \newsyntax{0}\termfix[2]{\termsynt{\termletter{fix}}\;#1\termsynt{.}\ \syntaxarg{0}{\termparen}{#2}}
 \newsyntax{0}\termabstyped[3]{\termsynt{\mathbf{\lambda}}#1\mathrel{\termsynt{:}}#2\termsynt{.}\ \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{0}\termfixtyped[3]{\termsynt{\termletter{fix}}\;#1\mathrel{\termsynt{:}}#2\termsynt{.}\ \syntaxarg{0}{\termparen}{#3}}
 % ---- let/letrec-expression ----
 \newsyntax{0}\termletin[4]{%
-  \termsynt{\termletter{let}}\ #1 \mathrel{\termsynt{=}}
-    \syntaxarg{0}{\termparen}{#3}\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}}
+  \termsynt{\termletter{let}}\ #1 \gfnsynt@arglist{#2} \mathrel{\termsynt{=}} 
+    \syntaxarg{0}{\termparen}{#3}\ifx\gfnsynt@unique#4\gfnsynt@unique\else\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}\fi}
 \newsyntax{0}\termletrecin[4]{%
-  \termsynt{\termletter{letrec}}\ #1 \mathrel{\termsynt{=}}
-    \syntaxarg{0}{\termparen}{#3}\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}}
+  \termsynt{\termletter{letrec}}\ #1 \gfnsynt@arglist{#2} \mathrel{\termsynt{=}}
+    \syntaxarg{0}{\termparen}{#3}\ifx\gfnsynt@unique#4\gfnsynt@unique\else\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}\fi}
+\def\gfnsynt@arglist#1{\ifx\gfnsynt@unique#1\gfnsynt@unique\else\gfnsynt@arglistsub#1|\gfnsynt@endofargument\fi}
+\def\gfnsynt@arglistsub#1|#2\gfnsynt@endofargument{\ #1\ifx\gfnsynt@unique#2\gfnsynt@unique\else\gfnsynt@arglistsub#2\gfnsynt@endofargument\fi}
 % ---- if-then-else conditional ----
 \newsyntax{0}\termifthenelse[3]{%
   \termsynt{\termletter{if}}\ \syntaxarg{0}{\termparen}{#1}\ \termsynt{\termletter{then}}\ \syntaxarg{0}{\termparen}{#2}%
                                                            \ \termsynt{\termletter{else}}\ \syntaxarg{0}{\termparen}{#3}}
 % ---- application ----
-\newsyntax{1}\termappseq[1]{\local@termappseq#1|\local@endofargument}
-\def\local@termappseq#1|#2\local@endofargument{%
-  \syntaxarg{1}{\termparen}{#1}\ifx\local@unique#2\local@unique\else\ \local@termappseqsub#2\local@endofargument\fi}
-\def\local@termappseqsub#1|#2\local@endofargument{%
-  \syntaxarg{2}{\termparen}{#1}\ifx\local@unique#2\local@unique\else\ \local@termappseqsub#2\local@endofargument\fi}
+\newsyntax{1}\termappseq[1]{\gfnsynt@termappseq#1|\gfnsynt@endofargument}
+\def\gfnsynt@termappseq#1|#2\gfnsynt@endofargument{%
+  \syntaxarg{1}{\termparen}{#1}\ifx\gfnsynt@unique#2\gfnsynt@unique\else\ \gfnsynt@termappseqsub#2\gfnsynt@endofargument\fi}
+\def\gfnsynt@termappseqsub#1|#2\gfnsynt@endofargument{%
+  \syntaxarg{2}{\termparen}{#1}\ifx\gfnsynt@unique#2\gfnsynt@unique\else\ \gfnsynt@termappseqsub#2\gfnsynt@endofargument\fi}
 %
+% ---- tuple ----
+\newsyntax{0}\termtuple[1]{\mathopen{\termsynt{(}}\gfnsynt@termtuple#1|\gfnsynt@endofargument\mathclose{\termsynt{)}}}
+\def\gfnsynt@termtuple#1|#2\gfnsynt@endofargument{%
+  #1\ifx\gfnsynt@unique#2\gfnsynt@unique\else\mathpunct{\termsynt{,}}\ \gfnsynt@termtuple#2\gfnsynt@endofargument\fi
+}
 % ==== ==== STANDARD TYPES ==== ====
 \newcommand\gfnsynt@tysyntcolor{[rgb]{0.7,0.0,0.0}}
 \newcommand\gfnsynt@tymetacolor{[rgb]{0.5,0.2,0.0}}

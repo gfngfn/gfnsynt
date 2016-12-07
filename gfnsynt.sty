@@ -10,6 +10,8 @@
   [1994/12/01]% LaTeX date must be December 1994 or later
 \ProvidesPackage{gfnsynt}[2016/10/12 v0.9 by Takashi SUWA]
 %%
+\def\gfnsynt@car#1#2\gfnsynt@endofargument{#1}
+\def\gfnsynt@cdr#1#2\gfnsynt@endofargument{#2}
 \def\gfnsynt@unique{\gfnsynt@uniquesub}
 \def\gfnsynt@ifsame#1#2\gfnsynt@punct#3#4\gfnsynt@punct#5#6{%
   % ---- ----
@@ -113,15 +115,41 @@
     #4%
   \fi
 }
+% ==== BNF ====
+\def\gfnsynt@BNFtab{&}
+\def\gfnsynt@BNFbreak{\\}
+\newcommand\BNFdefeq{\mathrel{%
+  \raisebox{-0.115em}{$\cdot$}\hspace{-0.28em}\raisebox{0.1em}{$\cdot$}%
+  \raisebox{-0.115em}{$\cdot$}\hspace{-0.28em}\raisebox{0.1em}{$\cdot$}\hspace{-0.3em}=%
+}}
+\newcommand\BNFin{\mathrel{%
+  \raisebox{-0.115em}{$\cdot$}\hspace{-0.28em}\raisebox{0.1em}{$\cdot$}%
+  \raisebox{-0.115em}{$\cdot$}\hspace{-0.28em}\raisebox{0.1em}{$\cdot$}\hspace{-0.3em}\in%
+}}
+\newcommand\defbyBNFin[2]{#1\gfnsynt@BNFtab\ \BNFin\ #2}
+\newcommand\defbyBNF[2]{#1\gfnsynt@BNFtab\ \BNFdefeq\ \gfnsynt@defbyBNF#2|\gfnsynt@endofargument}
+\def\gfnsynt@defbyBNF#1|#2\gfnsynt@endofargument{%
+  \ifx\gfnsynt@unique#2\gfnsynt@unique
+    #1%
+  \else
+    \expandafter\if\expandafter*\expandafter\gfnsynt@car#2\gfnsynt@endofargument
+      #1\gfnsynt@BNFbreak\gfnsynt@BNFtab\phantom{{}\BNFdefeq{}}\hspace{-0.5em}%
+        \mathrel{|}\ \expandafter\gfnsynt@defbyBNF\gfnsynt@cdr#2\gfnsynt@endofargument\gfnsynt@endofargument
+    \else
+      #1\ \mathrel{|}\ \gfnsynt@defbyBNF#2\gfnsynt@endofargument
+    \fi
+  \fi
+}
+%
 % ==== ==== AUTOMATED ADDITIONAL DECORATION FOR SUBSCRIPTS ==== ====
 \newtoks\gfnsynt@temptoksA
 \newtoks\gfnsynt@temptoksB
 \newtoks\gfnsynt@temptoksC
 \newtoks\gfnsynt@temptoksX
 \def\newstyledsymbol#1#2#3{%
-  \expandafter\def\expandafter#1\expandafter{\expandafter\futurelet\expandafter\gfnsynt@temp\csname local@\string#1\endcsname}%
-  \expandafter\gfnsynt@temptoksA\expandafter=\expandafter{\csname local@\string#1@sub\endcsname}\relax
-  \expandafter\gfnsynt@temptoksB\expandafter=\expandafter{\csname local@\string#1@nosub\endcsname}\relax
+  \expandafter\def\expandafter#1\expandafter{\expandafter\futurelet\expandafter\gfnsynt@temp\csname gfnsynt@\string#1\endcsname}%
+  \expandafter\gfnsynt@temptoksA\expandafter=\expandafter{\csname gfnsynt@\string#1@sub\endcsname}\relax
+  \expandafter\gfnsynt@temptoksB\expandafter=\expandafter{\csname gfnsynt@\string#1@nosub\endcsname}\relax
 %
   \expandafter\def\the\gfnsynt@temptoksA_##1{#2{#3_{##1}}}%
   \expandafter\def\the\gfnsynt@temptoksB{#2{#3}}%
@@ -129,7 +157,7 @@
   \expandafter\expandafter\expandafter\gfnsynt@temptoksX\expandafter\expandafter\expandafter=\expandafter\expandafter\expandafter{%
     \expandafter\expandafter\expandafter\ifx\expandafter\expandafter\expandafter\gfnsynt@temp\expandafter\expandafter\expandafter_\expandafter\expandafter\expandafter\expandafter\expandafter\the\expandafter\gfnsynt@temptoksA\expandafter\else\expandafter\expandafter\the\gfnsynt@temptoksB\fi}\relax
 %
-  \expandafter\gfnsynt@temptoksC\expandafter=\expandafter{\csname local@\string#1\endcsname}\relax
+  \expandafter\gfnsynt@temptoksC\expandafter=\expandafter{\csname gfnsynt@\string#1\endcsname}\relax
 %
   \expandafter\expandafter\expandafter\def\expandafter\the\expandafter\gfnsynt@temptoksC\expandafter{\the\gfnsynt@temptoksX}%
 }

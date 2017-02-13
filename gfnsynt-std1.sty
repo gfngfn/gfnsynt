@@ -4,13 +4,16 @@
 \newcommand\termsynt[1]{\text{\expandafter\textcolor\gfnsynt@termsyntcolor{$#1$}}}
 \newcommand\termmeta[1]{\text{\expandafter\textcolor\gfnsynt@termmetacolor{$#1$}}}
 \newcommand\termletter[1]{\mathbf{#1}}
-\newsyntax{-1}\termparen[1]{\mathopen{\termsynt{\text{\normalfont\textsf{(}}}}#1\mathclose{\termsynt{\text{\normalfont\textsf{)}}}}}
-% ---- lambda abstraction ----
-\newsyntax{0}\termabs[2]{\termsynt{\termletter{\lambda}}#1\termsynt{.}\ \syntaxarg{0}{\termparen}{#2}}
+\newsyntax{-2}\termparen[1]{\mathopen{\termsynt{\text{\normalfont\textsf{(}}}}#1\mathclose{\termsynt{\text{\normalfont\textsf{)}}}}}
+% ---- constants ----
+\newcommand\termtrue{\termsynt{\mathrm{true}}}
+\newcommand\termfalse{\termsynt{\mathrm{false}}}
+% ---- lambda abstractions and fixpoints ----
+\newsyntax{0}\termabs[2]{\termsynt{\bm{\lambda}}#1\termsynt{.}\ \syntaxarg{0}{\termparen}{#2}}
 \newsyntax{0}\termfix[2]{\termsynt{\termletter{fix}}\;#1\termsynt{.}\ \syntaxarg{0}{\termparen}{#2}}
-\newsyntax{0}\termabstyped[3]{\termsynt{\mathbf{\lambda}}#1\mathrel{\termsynt{:}}#2\termsynt{.}\ \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{0}\termabstyped[3]{\termsynt{\bm{\lambda}}#1\mathrel{\termsynt{:}}#2\termsynt{.}\ \syntaxarg{0}{\termparen}{#3}}
 \newsyntax{0}\termfixtyped[3]{\termsynt{\termletter{fix}}\;#1\mathrel{\termsynt{:}}#2\termsynt{.}\ \syntaxarg{0}{\termparen}{#3}}
-% ---- let/letrec-expression ----
+% ---- let/letrec-expressions ----
 \newsyntax{0}\termletin[4]{%
   \termsynt{\termletter{let}}\ #1 \gfnsynt@arglist{#2} \mathrel{\termsynt{=}} 
     \syntaxarg{0}{\termparen}{#3}\ifx\gfnsynt@unique#4\gfnsynt@unique\else\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}\fi}
@@ -19,12 +22,18 @@
     \syntaxarg{0}{\termparen}{#3}\ifx\gfnsynt@unique#4\gfnsynt@unique\else\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}\fi}
 \def\gfnsynt@arglist#1{\ifx\gfnsynt@unique#1\gfnsynt@unique\else\gfnsynt@arglistsub#1|\gfnsynt@endofargument\fi}
 \def\gfnsynt@arglistsub#1|#2\gfnsynt@endofargument{\ #1\ifx\gfnsynt@unique#2\gfnsynt@unique\else\gfnsynt@arglistsub#2\gfnsynt@endofargument\fi}
+% ---- expressions for polymorphism ----
+\newsyntax{0}\termlettypedin[4]{%
+  \termsynt{\termletter{let}}\ #1\mathbin{\termsynt{:}}#2\mathrel{\termsynt{=}}
+    \syntaxarg{0}{\termparen}{#3}\ifx\gfnsynt@unique#4\gfnsynt@unique\else\ \termsynt{\termletter{in}}\ \syntaxarg{0}{\termparen}{#4}\fi}
+\newsyntax{0}\termtypeabs[2]{\termsynt{\termletter{\rmLambda}}#1\mathpunct{\termsynt{.}} \syntaxarg{0}{\termparen}{#2}}
+\newsyntax{0}\termtypeapp[2]{\syntaxarg{0}{\termparen}{#1}\mathopen{\termsynt{\text{\texttt{[}}}}#2\mathclose{\termsynt{\text{\texttt{]}}}}}
 % ---- if-then-else conditional ----
 \newsyntax{0}\termifthenelse[3]{%
   \termsynt{\termletter{if}}\ \syntaxarg{0}{\termparen}{#1}\ \termsynt{\termletter{then}}\ \syntaxarg{0}{\termparen}{#2}%
                                                            \ \termsynt{\termletter{else}}\ \syntaxarg{0}{\termparen}{#3}}
 % ---- application ----
-\newsyntax{1}\termappseq[1]{\gfnsynt@termappseq#1|\gfnsynt@endofargument}
+\newsyntax{0}\termappseq[1]{\gfnsynt@termappseq#1|\gfnsynt@endofargument}
 \def\gfnsynt@termappseq#1|#2\gfnsynt@endofargument{%
   \syntaxarg{1}{\termparen}{#1}\ifx\gfnsynt@unique#2\gfnsynt@unique\else\ \gfnsynt@termappseqsub#2\gfnsynt@endofargument\fi}
 \def\gfnsynt@termappseqsub#1|#2\gfnsynt@endofargument{%
@@ -35,6 +44,12 @@
 \def\gfnsynt@termtuple#1|#2\gfnsynt@endofargument{%
   #1\ifx\gfnsynt@unique#2\gfnsynt@unique\else\mathpunct{\termsynt{,}}\ \gfnsynt@termtuple#2\gfnsynt@endofargument\fi
 }
+% ---- hole for evaluation contexts ----
+\newsyntax{0}\termhole{\mathopen{\termsynt{\text{\texttt{[}}}}\mathclose{\termsynt{\text{\texttt{]}}}}}
+\newsyntax{0}\termsubsthole[2]{\syntaxarg{0}{\termparen}{#1}%
+  \mathopen{\termsynt{\!\raisebox{-0.125em}{\text{\Large\texttt{[}}}}}#2\mathclose{\termsynt{\raisebox{-0.125em}{\text{\Large\texttt{]}}}\!}}}
+% ---- equality ----
+\newcommand\synteq{\equiv}
 % ==== ==== STANDARD TYPES ==== ====
 \newcommand\gfnsynt@tysyntcolor{[rgb]{0.7,0.0,0.0}}
 \newcommand\gfnsynt@tymetacolor{[rgb]{0.5,0.2,0.0}}
@@ -42,8 +57,17 @@
 \newcommand\tysynt[1]{\text{\expandafter\textcolor\gfnsynt@tysyntcolor{$#1$}}}
 \newcommand\tymeta[1]{\text{\expandafter\textcolor\gfnsynt@tymetacolor{$#1$}}}
 \newsyntax{-1}\typaren[1]{\mathopen{\tysynt{(}}#1\mathclose{\tysynt{)}}}
+% ---- base type ----
+\newcommand\basetypeletter[1]{\texttt{#1}}
+\newcommand\tybool{\tysynt{\basetypeletter{bool}}}
+\newcommand\tystring{\tysynt{\basetypeletter{string}}}
+\newcommand\tyint{\tysynt{\basetypeletter{int}}}
+\newcommand\tyfloat{\tysynt{\basetypeletter{float}}}
 % ---- arrow type ----
-\newsyntax{1}\tyarrow[2]{\syntaxarg{2}{\typaren}{#1}\mathbin{\tysynt{\rightarrow}}\syntaxarg{1}{\typaren}{#2}}
+\newsyntax{0}\tyarrow[2]{\syntaxarg{2}{\typaren}{#1}\mathbin{\tysynt{\rightarrow}}\syntaxarg{1}{\typaren}{#2}}
+% ---- universal quantification ----
+\newsyntax{0}\tyforall[2]{\tysynt{\forall}#1\mathpunct{\tysynt{.}}\syntaxarg{1}{\typaren}{#2}}
+\newsyntax{0}\tyforallkinded[3]{\tysynt{\forall}#1\mathbin{::}#2\mathpunct{\tysynt{.}}\syntaxarg{1}{\typaren}{#3}}
 % ==== ==== OTHERS ==== ====
 \newcommand\termbreak{\\}
 \newcommand\termtab{&}

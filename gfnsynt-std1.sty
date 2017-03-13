@@ -1,3 +1,14 @@
+% ==== ==== META-LEVEL OPERATIONS ==== ====
+\newcommand\synteq{\equiv}
+\def\gfnsynt@substdefeq{\mathrel{:=}}
+\def\subst@preslash#1#2#3{[#1/#2]#3}
+\def\subst@postslash#1#2#3{#3[#1/#2]}
+\def\subst@predefeq#1#2#3{[#2\gfnsynt@substdefeq#1]#3}
+\def\subst@postdefeq#1#2#3{#3[#2\gfnsynt@substdefeq#1]}
+\newcommand\specifysubst[1]{%
+  \expandafter\newsyntax\expandafter{\expandafter 0\expandafter}\expandafter\subst\expandafter[\expandafter 3\expandafter]\expandafter
+    {\csname subst@#1\endcsname{##1}{##2}{##3}}}
+\specifysubst{preslash}%(default)
 % ==== ==== STANDARD TERMS ==== ====
 \newcommand\gfnsynt@termsyntcolor{[rgb]{0.0,0.0,0.7}}
 \newcommand\gfnsynt@termmetacolor{[rgb]{0.5,0.0,0.5}}
@@ -48,8 +59,6 @@
 \newsyntax{0}\termhole{\mathopen{\termsynt{\text{\texttt{[}}}}\mathclose{\termsynt{\text{\texttt{]}}}}}
 \newsyntax{0}\termsubsthole[2]{\syntaxarg{0}{\termparen}{#1}%
   \mathopen{\termsynt{\!\raisebox{-0.125em}{\text{\Large\texttt{[}}}}}#2\mathclose{\termsynt{\raisebox{-0.125em}{\text{\Large\texttt{]}}}\!}}}
-% ---- equality ----
-\newcommand\synteq{\equiv}
 % ==== ==== STANDARD TYPES ==== ====
 \newcommand\gfnsynt@tysyntcolor{[rgb]{0.7,0.0,0.0}}
 \newcommand\gfnsynt@tymetacolor{[rgb]{0.5,0.2,0.0}}
@@ -57,7 +66,7 @@
 \newcommand\tysynt[1]{\text{\expandafter\textcolor\gfnsynt@tysyntcolor{$#1$}}}
 \newcommand\tymeta[1]{\text{\expandafter\textcolor\gfnsynt@tymetacolor{$#1$}}}
 \newsyntax{-1}\typaren[1]{\mathopen{\tysynt{(}}#1\mathclose{\tysynt{)}}}
-% ---- base type ----
+% ---- base types ----
 \newcommand\basetypeletter[1]{\texttt{#1}}
 \newcommand\tybool{\tysynt{\basetypeletter{bool}}}
 \newcommand\tystring{\tysynt{\basetypeletter{string}}}
@@ -68,6 +77,9 @@
 % ---- universal quantification ----
 \newsyntax{0}\tyforall[2]{\tysynt{\forall}#1\mathpunct{\tysynt{.}}\syntaxarg{1}{\typaren}{#2}}
 \newsyntax{0}\tyforallkinded[3]{\tysynt{\forall}#1\mathbin{::}#2\mathpunct{\tysynt{.}}\syntaxarg{1}{\typaren}{#3}}
+% ---- refinement types ----
+\newsyntax{0}\tybaserfn[2]{\mathopen{\tysynt{\{}}\mathord{\tysynt{\nu}}\mathbin{\tysynt{:}}#1\mathbin{\tysynt{|}}#2\mathclose{\tysynt{\}}}}
+\newsyntax{0}\tyarrowrfn[3]{#1\mathbin{\tysynt{:}}\syntaxarg{2}{\typaren}{#2}\mathbin{\tysynt{\rightarrow}}\syntaxarg{1}{\typaren}{#3}}
 % ==== ==== OTHERS ==== ====
 \newcommand\termbreak{\\}
 \newcommand\termtab{&}

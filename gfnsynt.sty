@@ -144,37 +144,64 @@
 }
 %
 % ==== ==== AUTOMATED ADDITIONAL DECORATION FOR SUBSCRIPTS ==== ====
-\newtoks\gfnsynt@temptoksA
-\newtoks\gfnsynt@temptoksB
-\newtoks\gfnsynt@temptoksC
-\newtoks\gfnsynt@temptoksD
+\newtoks\gfnsynt@temptoks@sub
+\newtoks\gfnsynt@temptoks@nosub
+\newtoks\gfnsynt@temptoks@prime
+\newtoks\gfnsynt@temptoks@middle
+\newtoks\gfnsynt@temptoksS
 \newtoks\gfnsynt@temptoksT
-\newtoks\gfnsynt@temptoksX
+\newtoks\gfnsynt@temptoks@definition
 \def\newstyledsymbol#1#2#3{%
-  \expandafter\def\expandafter#1\expandafter{\expandafter\futurelet\expandafter\gfnsynt@temp\csname gfnsynt@\string#1\endcsname}%
-  \expandafter\gfnsynt@temptoksA\expandafter=\expandafter{\csname gfnsynt@\string#1@sub\endcsname}\relax
-  \expandafter\gfnsynt@temptoksB\expandafter=\expandafter{\csname gfnsynt@\string#1@nosub\endcsname}\relax
-  \expandafter\gfnsynt@temptoksC\expandafter=\expandafter{\csname gfnsynt@\string#1@prime\endcsname}\relax
-  \expandafter\gfnsynt@temptoksD\expandafter=\expandafter{\csname gfnsynt@\string#1@middle\endcsname}\relax
+  \expandafter\gfnsynt@temptoksS\expandafter=\expandafter{\csname gfnsynt@[\string#1]@iter\endcsname}\relax
+  \expandafter\def\expandafter#1\expandafter{%
+    \expandafter\def\expandafter\gfnsynt@tempprimestock\expandafter{\expandafter}%
+    \the\gfnsynt@temptoksS
+  }%
+  \expandafter\expandafter\expandafter\def
+  \expandafter\the
+  \expandafter\gfnsynt@temptoksS
+  \expandafter{%
+    \expandafter\futurelet
+    \expandafter\gfnsynt@temp\csname gfnsynt@[\string#1]\endcsname
+  }%
+  \expandafter\gfnsynt@temptoks@sub\expandafter=\expandafter{\csname gfnsynt@[\string#1]@sub\endcsname}\relax
+  \expandafter\gfnsynt@temptoks@nosub\expandafter=\expandafter{\csname gfnsynt@[\string#1]@nosub\endcsname}\relax
+  \expandafter\gfnsynt@temptoks@prime\expandafter=\expandafter{\csname gfnsynt@[\string#1]@prime\endcsname}\relax
+  \expandafter\gfnsynt@temptoks@middle\expandafter=\expandafter{\csname gfnsynt@[\string#1]@middle\endcsname}\relax
 %
-  \expandafter\def\the\gfnsynt@temptoksA_##1{#2{#3_{##1}}}%
-  \expandafter\def\the\gfnsynt@temptoksB{#2{#3}}%
-  \expandafter\def\the\gfnsynt@temptoksC'{#2{#3^{\prime}}}%
+  \expandafter\def\the\gfnsynt@temptoks@sub_##1{#2{#3^{\gfnsynt@tempprimestock}_{##1}}}%
+  \expandafter\def\the\gfnsynt@temptoks@nosub{#2{#3^{\gfnsynt@tempprimestock}}}%
+  \expandafter\expandafter\expandafter\def
+  \expandafter\the
+  \expandafter\gfnsynt@temptoks@prime
+  \expandafter'%
+  \expandafter{%
+    \expandafter\expandafter
+    \expandafter\def
+    \expandafter\expandafter
+    \expandafter\gfnsynt@tempprimestock
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\gfnsynt@tempprimestock
+    \expandafter\prime
+    \expandafter}%
+    \the\gfnsynt@temptoksS
+  }%
   \expandafter\expandafter\expandafter\expandafter\expandafter\expandafter\expandafter\def
     \expandafter\expandafter\expandafter\the
-    \expandafter\expandafter\expandafter\gfnsynt@temptoksD
+    \expandafter\expandafter\expandafter\gfnsynt@temptoks@middle
     \expandafter\expandafter\expandafter{%
       \expandafter\expandafter\expandafter\ifx
       \expandafter\expandafter\expandafter\gfnsynt@temp
       \expandafter\expandafter\expandafter'%
       \expandafter\expandafter\expandafter\expandafter
       \expandafter\the
-      \expandafter\gfnsynt@temptoksC
+      \expandafter\gfnsynt@temptoks@prime
       \expandafter\else
       \expandafter\expandafter
-      \the\gfnsynt@temptoksB\fi}%
+      \the\gfnsynt@temptoks@nosub\fi}%
 %
-  \expandafter\expandafter\expandafter\gfnsynt@temptoksX
+  \expandafter\expandafter\expandafter\gfnsynt@temptoks@definition
     \expandafter\expandafter\expandafter=%
     \expandafter\expandafter\expandafter{%
       \expandafter\expandafter\expandafter\ifx
@@ -182,12 +209,11 @@
       \expandafter\expandafter\expandafter_%
       \expandafter\expandafter\expandafter\expandafter
       \expandafter\the
-      \expandafter\gfnsynt@temptoksA
+      \expandafter\gfnsynt@temptoks@sub
       \expandafter\else
       \expandafter\expandafter
-      \the\gfnsynt@temptoksD\fi}\relax
+      \the\gfnsynt@temptoks@middle\fi}\relax
 %
-  \expandafter\gfnsynt@temptoksT\expandafter=\expandafter{\csname gfnsynt@\string#1\endcsname}\relax
-%
-  \expandafter\expandafter\expandafter\def\expandafter\the\expandafter\gfnsynt@temptoksT\expandafter{\the\gfnsynt@temptoksX}%
+  \expandafter\gfnsynt@temptoksT\expandafter=\expandafter{\csname gfnsynt@[\string#1]\endcsname}\relax
+  \expandafter\expandafter\expandafter\def\expandafter\the\expandafter\gfnsynt@temptoksT\expandafter{\the\gfnsynt@temptoks@definition}%
 }

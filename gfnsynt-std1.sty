@@ -42,7 +42,9 @@
 \newcommand\termfalse{\termsynt{\mathrm{false}}}
 \newcommand\termunit{\termsynt{()}}
 \newcommand\termint[1]{\termsynt{#1}}
-\newcommand\termvar[1]{\termsynt{#1}}
+\newcommand\termstr[1]{\termsynt{\text{``}}\text{\expandafter\textcolor\gfnsynt@termsyntcolor{#1}}\termsynt{\text{''}}}
+\newcommand\termvar[1]{\termsynt{\mathit{#1}}}
+\newcommand\termwild{\termsynt{\string_}}
 %
 % ---- lambda abstractions and fixpoints ----
 \newsyntax{0}\termabs[2]{\gfnsynt@lambda#1\gfnsynt@dot\ \syntaxarg{0}{\termparen}{#2}}

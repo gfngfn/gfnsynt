@@ -11,6 +11,16 @@
     {\csname gfnsynt@subst@#1\endcsname{##1}{##2}{##3}}}
 \specifysubst{preslash}%(default)
 \newcommand\subty{\mathrel{<:}}
+\newcommand\redrel{%
+  \mathrel{%
+    \raisebox{-0.25em}{%
+    \begin{tikzpicture}
+      \path[use as bounding box] (-0.25em, -0.5em) |- (2.25em, 0.5em) |- cycle;
+      \draw[-latex] (0, 0) -- (2em, 0);
+    \end{tikzpicture}%
+    }%
+  }%
+}
 \newcommand\overwrite[3]{#1\sqbracket{#2\mapsto#3}}
 %
 %
@@ -31,6 +41,8 @@
 \newcommand\termtrue{\termsynt{\mathrm{true}}}
 \newcommand\termfalse{\termsynt{\mathrm{false}}}
 \newcommand\termunit{\termsynt{()}}
+\newcommand\termint[1]{\termsynt{#1}}
+\newcommand\termvar[1]{\termsynt{#1}}
 %
 % ---- lambda abstractions and fixpoints ----
 \newsyntax{0}\termabs[2]{\gfnsynt@lambda#1\gfnsynt@dot\ \syntaxarg{0}{\termparen}{#2}}

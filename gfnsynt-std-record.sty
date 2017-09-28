@@ -1,15 +1,23 @@
-\newcommand\fieldsynt[1]{\text{\textcolor[rgb]{0.1,0.5,0.1}{$\mathtt{#1}$}}}
-\newcommand\fieldmeta[1]{\text{\textcolor[rgb]{0.1,0.5,0.3}{$#1$}}}
+\newcommand\fieldsynt[1]{\text{\expandafter\textcolor\gfnsynt@fieldsyntcolor{$\mathtt{#1}$}}}
+\newcommand\fieldmeta[1]{\text{\expandafter\textcolor\gfnsynt@fieldmetacolor{$#1$}}}
 %
-\newsyntax{0}\termaccess[2]{\syntaxarg{1}{\termparen}{#1}\mathord{\termsynt{\#}}#2}
+\newsyntax{0}\termaccess[2]{\syntaxarg{1}{\termparen}{#1}\mathord{\termsynt{\gfnsynt@accesssymbol}}#2}
 \newsyntax{0}\termmodify[3]{\termsynt{\termletter{modify}}\ \syntaxarg{0}{\termparen}{#1}\ #2\ \syntaxarg{0}{\termparen}{#3}}
 \newsyntax{2}\termrecord[1]{%
-  \mathopen{\termsynt{\{}}\local@termrecord#1|\local@endofargument{\local@fieldandterm}{\termsynt}\mathclose{\termsynt{\}}}}
+  \mathopen{\termsynt{\gfnsynt@termrecordbraceopen}}%
+  \local@termrecord#1|\local@endofargument{\local@fieldandterm}{\termsynt}%
+  \mathclose{\termsynt{\gfnsynt@termrecordbraceclose}}%
+}
 \newsyntax{2}\tyrecord[1]{%
-  \mathopen{\tysynt{\{}}\local@termrecord#1|\local@endofargument{\local@fieldandtype}{\tysynt}\mathclose{\tysynt{\}}}}
+  \mathopen{\tysynt{\gfnsynt@tyrecordbraceopen}}%
+  \local@termrecord#1|\local@endofargument{\local@fieldandtype}{\tysynt}%
+  \mathclose{\tysynt{\gfnsynt@tyrecordbraceclose}}%
+}
 \newsyntax{2}\kdrecord[1]{%
-  \mathopen{\tysynt{\{\hspace{-0.375em}\{}}%
-    \local@termrecord#1|\local@endofargument{\local@fieldandtype}{\tysynt}\mathclose{\tysynt{\}\hspace{-0.375em}\}}}}
+  \mathopen{\tysynt{\gfnsynt@kdrecordbraceopen}}%
+  \local@termrecord#1|\local@endofargument{\local@fieldandtype}{\tysynt}%
+  \mathclose{\tysynt{\gfnsynt@kdrecordbraceclose}}%
+}
 \def\local@fieldandterm#1,#2\local@endofargument{#1\mathord{\termsynt{=}}\ #2}
 \def\local@fieldandtype#1,#2\local@endofargument{#1\mathbin{\tysynt{:}}#2}
 \def\local@termrecord#1|#2\local@endofargument#3#4{%
@@ -20,5 +28,46 @@
   \fi
   \ifx\gfnsynt@unique#2\gfnsynt@unique\else\mathpunct{#4{,}}\ \local@termrecord#2\local@endofargument{#3}{#4}\fi
 }
-\newsyntax{0}\termtypeabskinded[3]{\termsynt{\termletter{\rmLambda}}#1\mathrel{:}#2\mathpunct{\termsynt{.}} \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{0}\termtypeabskinded[3]{\termsynt{\termletter{\rmLambda}}#1\mathrel{:}#2\mathpunct{\termsynt{.}}\ \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{1}\termrecordupdate[3]{\syntaxarg{0}{\termparen}{#1}\ \termsynt{\termletter{update}}\ #2\ \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{1}\termrecordextend[3]{\syntaxarg{0}{\termparen}{#1}\ \termsynt{\termletter{extend}}\ #2\ \syntaxarg{0}{\termparen}{#3}}
+\newsyntax{1}\termrecordconcat[2]{\syntaxarg{0}{\termparen}{#1}\mathbin{\termsynt{|\&|}}\syntaxarg{0}{\termparen}{#2}}
 \newcommand\kdU{\tysynt{\mathsf{U}}}
+%
+% ---- commands for option designation ----
+\newcommand\setfieldsyntcolor[2][]{%
+  \ifx\gfnsynt@unique#1\gfnsynt@unique
+    \def\gfnsynt@fieldsyntcolor{{#2}}%
+  \else
+    \def\gfnsynt@fieldsyntcolor{[#1]{#2}}%
+  \fi
+}
+\newcommand\setfieldmetacolor[2][]{%
+  \ifx\gfnsynt@unique#1\gfnsynt@unique
+    \def\gfnsynt@fieldmetacolor{{#2}}%
+  \else
+    \def\gfnsynt@fieldmetacolor{[#1]{#2}}%
+  \fi
+}
+\newcommand\setaccesssymbol[1]{%
+  \def\gfnsynt@accesssymbol{#1}%
+}
+\newcommand\settermrecordbrace[2]{%
+  \def\gfnsynt@termrecordbraceopen{#1}%
+  \def\gfnsynt@termrecordbraceclose{#2}%
+}
+\newcommand\settyrecordbrace[2]{%
+  \def\gfnsynt@tyrecordbraceopen{#1}%
+  \def\gfnsynt@tyrecordbraceclose{#2}%
+}
+\newcommand\setkdrecordbrace[2]{%
+  \def\gfnsynt@kdrecordbraceopen{#1}%
+  \def\gfnsynt@kdrecordbraceclose{#2}%
+}
+% ---- default values ----
+\setfieldsyntcolor[rgb]{0.1,0.5,0.1}
+\setfieldmetacolor[rgb]{0.1,0.5,0.3}
+\setaccesssymbol{\#}
+\settermrecordbrace{\{}{\}}
+\settyrecordbrace{\{}{\}}
+\setkdrecordbrace{\{\hspace{-0.375em}\{}{\}\hspace{-0.375em}\}}

@@ -22,6 +22,7 @@
   }%
 }
 \newcommand\overwrite[3]{#1\sqbracket{#2\mapsto#3}}
+\newcommand\equnified{\mathrel{\smash{\stackrel{?}{=}}}}
 %
 %
 % ==== ==== STANDARD TERMS ==== ====
@@ -32,6 +33,7 @@
 \newcommand\termletter[1]{\mathbf{#1}}
 \newsyntax{-2}\termparen[1]{\mathopen{\termsynt{\text{\normalfont\textsf{(}}}}#1\mathclose{\termsynt{\text{\normalfont\textsf{)}}}}}
 \def\gfnsynt@dot{\mathpunct{\termsynt{.}}}
+\def\gfnsynt@tydot{\mathpunct{\tysynt{.}}}
 \def\gfnsynt@colon{\mathrel{\termsynt{:}}}
 \def\gfnsynt@lambda{\mathord{\termsynt{\bm{\lambda}}}}
 \def\gfnsynt@fix{\mathord{\termsynt{\termletter{fix}}}}
@@ -42,7 +44,7 @@
 \newcommand\termfalse{\termsynt{\mathrm{false}}}
 \newcommand\termunit{\termsynt{()}}
 \newcommand\termint[1]{\termsynt{#1}}
-\newcommand\termstr[1]{\termsynt{\text{``}}\text{\expandafter\textcolor\gfnsynt@termsyntcolor{#1}}\termsynt{\text{''}}}
+\newcommand\termstr[1]{\termsynt{\text{``}}\text{\expandafter\textcolor\gfnsynt@termsyntcolor{\texttt{#1}}}\termsynt{\text{''}}}
 \newcommand\termvar[1]{\termsynt{\mathit{#1}}}
 \newcommand\termwild{\termsynt{\string_}}
 %
@@ -104,6 +106,7 @@
 %
 % ---- base types ----
 \newcommand\basetypeletter[1]{\texttt{#1}}
+\newcommand\tyunit{\tysynt{\basetypeletter{unit}}}
 \newcommand\tybool{\tysynt{\basetypeletter{bool}}}
 \newcommand\tystring{\tysynt{\basetypeletter{string}}}
 \newcommand\tyint{\tysynt{\basetypeletter{int}}}
@@ -113,8 +116,8 @@
 \newsyntax{1}\tyarrow[2]{\syntaxarg{2}{\typaren}{#1}\mathbin{\tysynt{\rightarrow}}\syntaxarg{1}{\typaren}{#2}}
 %
 % ---- universal quantification ----
-\newsyntax{0}\tyforall[2]{\tysynt{\forall}#1\gfnsynt@dot\syntaxarg{1}{\typaren}{#2}}
-\newsyntax{0}\tyforallkinded[3]{\tysynt{\forall}#1\mathbin{\tysynt{::}}#2\gfnsynt@dot\syntaxarg{1}{\typaren}{#3}}
+\newsyntax{0}\tyforall[2]{\tysynt{\forall}#1\gfnsynt@tydot\syntaxarg{0}{\typaren}{#2}}
+\newsyntax{0}\tyforallkinded[3]{\tysynt{\forall}#1\mathbin{\tysynt{::}}#2\gfnsynt@tydot\syntaxarg{0}{\typaren}{#3}}
 %
 % ---- refinement types ----
 \newcommand\fmlnu{\mathord{\tysynt{\nu}}}

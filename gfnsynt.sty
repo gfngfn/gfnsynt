@@ -134,7 +134,7 @@
   \ifx\gfnsynt@unique#2\gfnsynt@unique
     #1%
   \else
-    \expandafter\if\expandafter*\expandafter\gfnsynt@car#2\gfnsynt@endofargument
+    \expandafter\if\expandafter*\expandafter\string\gfnsynt@car#2\gfnsynt@endofargument
       #1\gfnsynt@BNFbreak\gfnsynt@BNFtab\phantom{{}\BNFdefeq{}}\hspace{-0.5em}%
         \mathrel{|}\ \expandafter\gfnsynt@defbyBNF\gfnsynt@cdr#2\gfnsynt@endofargument\gfnsynt@endofargument
     \else

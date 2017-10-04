@@ -112,8 +112,11 @@
 \newcommand\tyint{\tysynt{\basetypeletter{int}}}
 \newcommand\tyfloat{\tysynt{\basetypeletter{float}}}
 %
-% ---- arrow type ----
+% ---- arrow types ----
 \newsyntax{1}\tyarrow[2]{\syntaxarg{2}{\typaren}{#1}\mathbin{\tysynt{\rightarrow}}\syntaxarg{1}{\typaren}{#2}}
+%
+% ---- type constuctors ----
+\newsyntax{1}\tyapp[2]{\syntaxarg{2}{\typaren}{#1}\ \syntaxarg{1}{\typaren}{#2}}
 %
 % ---- universal quantification ----
 \newsyntax{0}\tyforall[2]{\tysynt{\forall}#1\gfnsynt@tydot\syntaxarg{0}{\typaren}{#2}}

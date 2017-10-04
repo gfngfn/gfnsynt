@@ -1,0 +1,22 @@
+\newsyntax{10}\procact[2]{%
+  \ifx\gfnsynt@unique#1\gfnsynt@unique\else\gfnsynt@actarraysub#1|\gfnsynt@endofargument\fi
+  \ifx\gfnsynt@unique#2\gfnsynt@unique\else
+    \termsynt{.}\syntaxarg{10}{\termparen}{#2}%
+  \fi
+}
+\def\gfnsynt@actarraysub#1|#2\gfnsynt@endofargument{%
+  #1%
+  \ifx\gfnsynt@unique#2\gfnsynt@unique\else
+    \mathpunct{\termsynt{.}}%
+    \gfnsynt@actarraysub#2\gfnsynt@endofargument
+  \fi
+}
+\newsyntax{10}\procnu[2]{\termparen{\termsynt{\termletter{\nu}}#1}\syntaxarg{10}{\termparen}{#2}}
+\newsyntax{1}\procnondet[2]{\syntaxarg{1}{\termparen}{#1}\mathbin{\termsynt{+}}\syntaxarg{1}{\termparen}{#2}}
+\newsyntax{1}\procpar[2]{\syntaxarg{1}{\termparen}{#1}\mathbin{\termsynt{|}}\syntaxarg{1}{\termparen}{#2}}
+\newsyntax{10}\procnull{\termsynt{\termletter{0}}}
+\newcommand\actout[1]{\overline{#1}}
+\newcommand\actoutval[2]{\overline{#1}#2}
+\newcommand\actin[1]{#1}
+\newcommand\actinval[2]{#1\termparen{#2}}
+\newcommand\actinternal{\termsynt{\termletter{\tau}}}

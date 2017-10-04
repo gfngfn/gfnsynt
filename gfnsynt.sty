@@ -34,16 +34,21 @@
 }
 \def\gfnsynt@car#1#2\gfnsynt@endofargument{#1}
 \def\gfnsynt@syntaxcommandlist{}
-\def\newsyntax#1#2{%
+\def\gfnsynt@newsyntax#1#2#3{%
   % PUBLIC
   % ---- ----
-  % #1 : assoc
-  % #2 : control sequence and its definition
+  % #1 : \newcommand, \renewcommand, or \providecommand
+  % #2 : assoc
+  % #3 : control sequence and its definition
   % ---- ----
-  \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#2|}%
-  \expandafter\def\csname gfnsynt@assoc[\string#2]\endcsname{#1}%
-  \newcommand#2%
+  \expandafter\def\expandafter\gfnsynt@syntaxcommandlist\expandafter{\gfnsynt@syntaxcommandlist#3|}%
+  \expandafter\def\csname gfnsynt@assoc[\string#3]\endcsname{#2}%
+  #1#3%
 }
+\def\newsyntax{\gfnsynt@newsyntax\newcommand}
+\def\renewsyntax{\gfnsynt@newsyntax\renewcommand}
+\def\providesyntax{\gfnsynt@newsyntax\providecommand}
+%
 \def\gfnsynt@ifsyntaxcommand#1#2#3{%
   % ---- ----
   % #1 : first token
